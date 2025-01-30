@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculator</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background: radial-gradient(rgb(112, 109, 109), rgb(225, 225, 225));
+      font-family: Arial, sans-serif;
+    }
+
+    .calculator {
+      width: 300px;
+      background: #ffffff;
+      border: 1px solid #cccccc;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+
+    .display {
+      padding: 20px;
+      font-size: 2em;
+      background: #f2f2f2;
+      text-align: right;
+      border-bottom: 1px solid #cccccc;
+      height: 70px;
+      box-sizing: border-box;
+      overflow-x: auto;
+    }
+
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      background: #cccccc;
+    }
+
+    .button {
+      padding: 20px;
+      background: #ffffff;
+      text-align: center;
+      font-size: 1.2em;
+      cursor: pointer;
+      border: none;
+      outline: none;
+      transition: background 0.2s;
+    }
+
+    .button:hover {
+      background: #e0e0e0;
+    }
+
+    .button.operator {
+      background: #f9f9f9;
+      color: #0078d7;
+    }
+
+    .button.equals {
+      background: linear-gradient(rgb(4, 0, 255), rgb(255, 0, 157));
+      color: white;
+      grid-column: span 2;
+    }
+
+    .button.clear {
+      background: linear-gradient(rgb(255, 0, 0), rgb(238, 255, 0));
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <div class="calculator">
+    <div id="display" class="display">0</div>
+    <div class="buttons">
+      <button class="button clear">C</button>
+      <button class="button operator">%</button>
+      <button class="button operator">/</button>
+      <button class="button operator">×</button>
+      <button class="button">7</button>
+      <button class="button">8</button>
+      <button class="button">9</button>
+      <button class="button operator">-</button>
+      <button class="button">4</button>
+      <button class="button">5</button>
+      <button class="button">6</button>
+      <button class="button operator">+</button>
+      <button class="button">1</button>
+      <button class="button">2</button>
+      <button class="button">3</button>
+      <button class="button equals">=</button>
+      <button class="button">0</button>
+      <button class="button">.</button>
+    </div>
+  </div>
+
+  <script>
+    const display = document.getElementById("display");
+    const buttons = document.querySelectorAll(".button");
+    let currentInput = "0";
+    let operator = null;
+    let firstOperand = null;
+
+    buttons.forEach((button) => {
+      button.addEventListener("click", () => {
+        const value = button.textContent;
+
+        if (button.classList.contains("clear")) {
+          currentInput = "0";
+          operator = null;
+          firstOperand = null;
+        } else if (button.classList.contains("operator")) {
+          operator = value;
+          firstOperand = parseFloat(currentInput);
+          currentInput = "0";
+        } else if (button.classList.contains("equals")) {
+          if (operator && firstOperand !== null) {
+            const secondOperand = parseFloat(currentInput);
+            switch (operator) {
+              case "+":
+                currentInput = (firstOperand + secondOperand).toString();
+                break;
+              case "-":
+                currentInput = (firstOperand - secondOperand).toString();
+                break;
+              case "×":
+                currentInput = (firstOperand * secondOperand).toString();
+                break;
+              case "/":
+                currentInput = secondOperand === 0 ? "Error" : (firstOperand / secondOperand).toString();
+                break;
+              case "%":
+                currentInput = (firstOperand % secondOperand).toString();
+                break;
+            }
+            operator = null;
+            firstOperand = null;
+          }
+        } else {
+          // Handle digits and decimals
+          if (currentInput === "0" && value !== ".") {
+            currentInput = value;
+          } else {
+            currentInput += value;
+          }
+        }
+
+        // Update display
+        display.textContent = currentInput;
+      });
+    });
+  </script>
+</body>
+</html>
